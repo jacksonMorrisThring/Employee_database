@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
 const inquirerIndex = () => {
-    const nodeMan = () => {
         //Prompts to specify which object should be created
         const askQuestion = () => {
             inquirer.prompt([
@@ -53,8 +52,7 @@ const inquirerIndex = () => {
             });                                                                                                             
         };
         askQuestion() 
-    }
-    nodeMan();
+
     
     
     const handleAnswers = ({Action}) => {
