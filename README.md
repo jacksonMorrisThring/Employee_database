@@ -42,3 +42,5 @@ Integration testing
 Any additional questions? Reach me at jacksonmorristhring2000@gmail.com
 
 View my github profile and previous projects at https://github.com/jacksonMorrisThring
+
+Video link at https://drive.google.com/file/d/1ZnnyuqeSvOZxga8QvPZDK0xv02kBv2q3/view
