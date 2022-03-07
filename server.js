@@ -12,8 +12,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-const inquirer = require('inquirer');
-// const sequelize = require('./config/connection');
 
 const db = mysql.createConnection(
   {
@@ -42,12 +40,4 @@ async function startServer() {
 
 startServer();
 
-
-
-// db.query(`SELECT * FROM employee`, (err, result) => {
-//   if (err) {
-//     console.log(err);
-//   }
-//   console.table(result);
-// });
-
+module.exports = db;
