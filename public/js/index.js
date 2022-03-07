@@ -56,7 +56,7 @@ const inquirer = require('inquirer');
     
     
     const handleAnswers = ({Action}) => {
-        // console.log(Action);
+        console.log(Action);
 
 
         // console.log("Creating employee... email:" + email + " and officeNumber: "+officeNumber);
