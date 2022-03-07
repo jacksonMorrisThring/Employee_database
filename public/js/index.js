@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const inquirerIndex = () => {
+// const inquirerIndex = () => {
         //Prompts to specify which object should be created
         const askQuestion = () => {
             inquirer.prompt([
@@ -105,7 +105,7 @@ const inquirerIndex = () => {
         //     // console.log(HTMLpageContent);
         // }
     }
-}
-inquirerIndex();
+// }
+// inquirerIndex();
 
-module.exports = inquirerIndex;
+module.exports = askQuestion;
