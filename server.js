@@ -12,8 +12,9 @@ const sequelize = require('./config/connection');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const inquirerIndex = require("./public/js/index.js");
 
+
+const inquirerIndex = require("./public/js/index.js");
 app.use(inquirerIndex);
 // app.use(routes);
 
@@ -57,5 +58,6 @@ app.use(inquirerIndex);
 // });
 
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log('Now listening'));
+  app.listen(PORT);
 });
+

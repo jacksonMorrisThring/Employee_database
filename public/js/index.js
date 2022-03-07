@@ -58,7 +58,9 @@ const inquirerIndex = () => {
     
     
     const handleAnswers = ({Action}) => {
-        console.log(Action);
+        // console.log(Action);
+
+
         // console.log("Creating employee... email:" + email + " and officeNumber: "+officeNumber);
         // if (position === "Manager") {
         //     console.log("Creating a manager");
