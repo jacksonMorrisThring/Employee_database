@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 
 const db = require('../../server.js');
 
-
+tempId = 0;
 // const inquirerIndex = () => {
 //Prompts to specify which object should be created
 const handleAnswers = ({ Action }) => {
@@ -11,7 +11,7 @@ const handleAnswers = ({ Action }) => {
     const expr = Action;
     switch (expr) {
         case 'View all departments':
-            db.query(`SELECT name FROM department`, (err, result) => {
+            db.query(`SELECT name, id FROM department`, (err, result) => {
                 if (err) {
                     console.log(err);
                 }
@@ -23,7 +23,7 @@ const handleAnswers = ({ Action }) => {
             break;
 
         case 'View all roles':
-            db.query(`SELECT title, salary FROM role`, (err, result) => {
+            db.query(`SELECT * FROM role`, (err, result) => {
                 if (err) {
                     console.log(err);
                 }
@@ -33,7 +33,7 @@ const handleAnswers = ({ Action }) => {
             break;
 
         case 'View all employees':
-            db.query(`SELECT first_name, last_name FROM employee`, (err, result) => {
+            db.query(`SELECT * FROM employee INNER JOIN role ON employee.id = role.id`, (err, result) => {
                 if (err) {
                     console.log(err);
                 }
@@ -48,16 +48,16 @@ const handleAnswers = ({ Action }) => {
                     if (err) {
                         console.log(err);
                     }
-                    
+
                     db.query(`SELECT name FROM department`, (err, result) => {
-                     
+
                         if (err) {
                             console.log(err);
                         }
                         console.table(result);
                         interface();
                     });
-                })   
+                })
             }
 
             inquirer
@@ -79,30 +79,48 @@ const handleAnswers = ({ Action }) => {
         case 'Add a role':
 
             const handleAddRole = ({ departmentOfRole, newTitle, newSalary }) => {
-                
-                db.query(`SELECT id FROM department WHERE name = (?)`,departmentOfRole, (err, result) => {
-                     
+
+
+                db.query(`SELECT id FROM department WHERE name = (?)`, departmentOfRole, (err, result) => {
+
                     if (err) {
                         console.log(err);
                     }
                     console.log(result);
 
+                    function f(object) {
+                        const [key, value] = Object.entries(object)[0];
+                        // console.log('key is ' + key);
+                        // console.log('value is ' + value);
+
+                        return value;
+                    }
+
+                    dep_id = f(result[0]);
+                    // console.log(`id is ${dep_id}`);
+
+                    db.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [newTitle, newSalary, dep_id], (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+
+                    });
+
+                    db.query(`SELECT * FROM role WHERE department_id = ?`, dep_id, (err, result) => {
+
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.table(result);
+                        interface();
+                    });
+
                 });
 
-                
-                // db.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, newTitle, newSalary, id, (err, result) => {
-                //     if (err) {
-                //         console.log(err);
-                //     }
-                // });
-                    
-                // db.query(`SELECT * FROM role WHERE department_id = ?`,id, (err, result) => {
-                     
-                //     if (err) {
-                //         console.log(err);
-                //     }
-                //     console.table(result);
-                // })  
+                // console.log("temp id passed along is");
+                // console.log(dep_id);
+
+
             }
 
             inquirer
@@ -125,7 +143,7 @@ const handleAnswers = ({ Action }) => {
                         message: 'What salary do you want for the new role?',
 
                     }
-                    
+
 
                 ])
 
@@ -135,58 +153,117 @@ const handleAnswers = ({ Action }) => {
             break;
 
         case 'Add an employee':
-            db.query(`SELECT first_name, last_name FROM employee`, (err, result) => {
-                if (err) {
-                    console.log(err);
-                }
-                console.table(result);
-            });
+            const handleAddEmployee = ({ first_name, last_name, role_id, manager_id }) => {
+
+                db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [first_name, last_name, role_id, manager_id], (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+
+                db.query(`SELECT * FROM employee`, (err, result) => {
+
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.table(result);
+                    interface();
+                });
+            }
+        
+
+            inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'first_name',
+                        message: 'What is there first name?',
+
+                    },
+                    {
+                        type: 'input',
+                        name: 'last_name',
+                        message: 'What is there last name?',
+
+                    },
+                    {
+                        type: 'input',
+                        name: 'role_id',
+                        message: 'What is there role id?',
+
+                    },
+                    {
+                        type: 'input',
+                        name: 'manager_id',
+                        message: 'What is there managers_id?',
+
+                    }
+                ])
+
+                .then((answers) => {
+                    handleAddEmployee(answers);
+                });
             break;
 
         case 'Update an employee role':
-            db.query(`SELECT title FROM role`, (err, result) => {
-                if (err) {
-                    console.log(err);
+            case 'Add an employee':
+                const handleUpdateEmployee = ({ first_name, last_name, role_id, manager_id }) => {
+    
+                    db.query(`UPDATE employee SET first_name = (?), last_name = (?), role_id = (?), manager_id) = (?) WHERE role_id = (?)`, [first_name, last_name, role_id, manager_id, role_id], (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+
+                    });
+    
+                    db.query(`SELECT * FROM employee`, (err, result) => {
+    
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.table(result);
+                        interface();
+                    });
                 }
-                console.table(result);
-            });
+            
+    
+                inquirer
+                    .prompt([
+                        {
+                            type: 'input',
+                            name: 'first_name',
+                            message: 'What is there first name?',
+    
+                        },
+                        {
+                            type: 'input',
+                            name: 'last_name',
+                            message: 'What is there last name?',
+    
+                        },
+                        {
+                            type: 'input',
+                            name: 'role_id',
+                            message: 'What is there role id?',
+    
+                        },
+                        {
+                            type: 'input',
+                            name: 'manager_id',
+                            message: 'What is there managers_id?',
+    
+                        }
+                    ])
+    
+                    .then((answers) => {
+                        handleUpdateEmployee(answers);
+                    });
             break;
         default:
             console.log(`Error`);
     }
-
-
-
-    // if (Action === "View all departments") {
-    //     db.query(`SELECT * FROM department`, (err, result) => {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //         console.table(result);
-    //     });
-
-    //     if (Action === "View all roles") {
-    //         db.query(`SELECT * FROM role`, (err, result) => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //             console.table(result);
-    //         });
-    //     }
-
-    // if (condition) {
-
-    // }
-
-    // if (condition) {
-
-    // }
-
-    // if (condition) {
-
-    // }
-
 }
+
 
 const interface = () => {
     inquirer
@@ -199,47 +276,11 @@ const interface = () => {
                 choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role"],
             }
         ])
-    
+
         .then((answers) => {
             handleAnswers(answers);
         });
 }
-
-//interface();
-
-
-
-//     async function main() {
-
-
-//         const askQuestion = (await inquirer.prompt([
-//             {
-//                 type: 'list',
-//                 name: 'Action',
-//                 default: "View all Departments",
-//                 message: 'What would you like to do?',
-//                 choices: ["View all Departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an Employee", "Update an employee"],
-//             }
-
-//         ]))
-
-//         .then((answers) => {
-//             handleAnswers(answers);
-//         });                                                                                                             
-//     };
-
-//     main();
-
-
-// const handleAnswers = ({Action}) => {
-//     console.log(Action);
-//     if (Action === "View all Departments"){
-
-//     }
-
-
-// }
-// inquirerIndex();
 
 module.exports = interface();
 
