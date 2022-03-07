@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 
 const db = require('../../server.js');
+
 // const inquirerIndex = () => {
 //Prompts to specify which object should be created
 const handleAnswers = ({ Action }) => {
@@ -42,25 +43,21 @@ const handleAnswers = ({ Action }) => {
 
         case 'Add a department':
             const handleAddDepartment = ({ newDepartment }) => {
-                db.query(`INSERT INTO department (name) VALUES ?`, newDepartment, (err, result) => {
+                db.query(`INSERT INTO department (name) VALUES (?)`, newDepartment, (err, result) => {
                     if (err) {
                         console.log(err);
                     }
                     
-                    // db.query(`SELECT name FROM department`, (err, result) => {
+                    db.query(`SELECT name FROM department`, (err, result) => {
                      
-                    //     if (err) {
-                    //         console.log(err);
-                    //     }
-                    //     console.table(result);
-                    // });
-
-                })
-
-                
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.table(result);
+                        interface();
+                    });
+                })   
             }
-
-
 
             inquirer
                 .prompt([
@@ -79,12 +76,71 @@ const handleAnswers = ({ Action }) => {
             break;
 
         case 'Add a role':
-            db.query(`SELECT title, salary FROM role`, (err, result) => {
-                if (err) {
-                    console.log(err);
-                }
-                console.table(result);
-            });
+
+            const handleAddRole = ({ departmentOfRole, newTitle, newSalary }) => {
+                
+                db.query(`SELECT id FROM department WHERE name = (?)`,departmentOfRole, (err, result) => {
+                     
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log(result);
+                    id = result[0];
+                    console.log(`id is now ${id}`);
+                    id = parseInt(id);
+                    console.log(`id is now ${id}`);
+
+                    id = result[1];
+                    console.log(`id is now ${id}`);
+                    id = JSON.parse(id);
+                    console.log(`id is now ${id}`);
+
+
+                });
+
+                
+                // db.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, newTitle, newSalary, id, (err, result) => {
+                //     if (err) {
+                //         console.log(err);
+                //     }
+                // });
+                    
+                // db.query(`SELECT * FROM role WHERE department_id = ?`,id, (err, result) => {
+                     
+                //     if (err) {
+                //         console.log(err);
+                //     }
+                //     console.table(result);
+                // })  
+            }
+
+            inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'departmentOfRole',
+                        message: 'What department do you want to add the new role to?',
+
+                    },
+                    {
+                        type: 'input',
+                        name: 'newTitle',
+                        message: 'What title do you want for the new role?',
+
+                    },
+                    {
+                        type: 'input',
+                        name: 'newSalary',
+                        message: 'What salary do you want for the new role?',
+
+                    }
+                    
+
+                ])
+
+                .then((answers) => {
+                    handleAddRole(answers);
+                });
             break;
 
         case 'Add an employee':
