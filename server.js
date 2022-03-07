@@ -12,6 +12,9 @@ const sequelize = require('./config/connection');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+const inquirerIndex = require("./public/js/index.js");
+
+app.use(inquirerIndex);
 // app.use(routes);
 
 
