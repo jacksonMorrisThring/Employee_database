@@ -6,6 +6,12 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const mysql = require('mysql2');
 
+
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+
 const inquirer = require('inquirer');
 // const sequelize = require('./config/connection');
 
@@ -18,54 +24,63 @@ const db = mysql.createConnection(
     password: 'Tyrojones2000',
     database: 'employee_tracker_db'
   },
-  console.log(`Connected to the books_db database.`)
+  console.log(`Connected to the employee_tracker_db database.`)
 );
+
+db.query(`SELECT * FROM employee WHERE id = ?`, 1, (err, result) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(result);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 // const routes = require("./routes");
 
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
-const inquirerIndex = require("./public/js/index.js");
-app.use(inquirerIndex);
+
+// const inquirerIndex = require("./public/js/index.js");
+// app.use(inquirerIndex);
+// const routes = require("./routes/index.js");
+// app.use(routes);
 
 
 // app.use(routes);
 
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 
 
 
-const askQuestion = () => {
-  inquirer.prompt([
-  {
-      type: 'list',
-      name: 'Action',
 
-      message: 'What would you like to do?',
-      choices: ["View all Departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an Employee", "Update an employee"],
-  }])
+// const askQuestion = () => {
+//   inquirer.prompt([
+//   {
+//       type: 'list',
+//       name: 'Action',
+
+//       message: 'What would you like to do?',
+//       choices: ["View all Departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an Employee", "Update an employee"],
+//   }])
         
-  .then((answers) => {
-      handleAnswers(answers);
-  });                                                                                                             
-};
-// askQuestion() 
+//   .then((answers) => {
+//       handleAnswers(answers);
+//   });                                                                                                             
+// };
+// // askQuestion() 
 
 
 
-const handleAnswers = ({Action}) => {
-console.log(Action);
-if (Action === "View all Departments"){
-  db.query('SELECT * FROM employee', function (err, results) {
-    console.log(results);
-  });
-}
-}
+// const handleAnswers = ({Action}) => {
+// console.log(Action);
+// if (Action === "View all Departments"){
+//   db.query('SELECT * FROM employee', function (err, results) {
+//     console.log(results);
+//   });
+// }
+// }
 
 
 
