@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 
 const db = require('../../server.js');
 
+
 // const inquirerIndex = () => {
 //Prompts to specify which object should be created
 const handleAnswers = ({ Action }) => {
@@ -85,16 +86,6 @@ const handleAnswers = ({ Action }) => {
                         console.log(err);
                     }
                     console.log(result);
-                    id = result[0];
-                    console.log(`id is now ${id}`);
-                    id = parseInt(id);
-                    console.log(`id is now ${id}`);
-
-                    id = result[1];
-                    console.log(`id is now ${id}`);
-                    id = JSON.parse(id);
-                    console.log(`id is now ${id}`);
-
 
                 });
 
